@@ -1,0 +1,30 @@
+syntax = "proto3";
+// 定义包名
+package probuf;
+
+
+service Account{
+    rpc LogUp (LogReq) returns (LogRes){};
+}
+
+message LogReq{
+    string name=1;
+    string email=2;
+    string phone=3;
+    int64 role=4;
+    string address=5;
+    string password=6;
+    string type=7;
+    string code=8;
+}
+
+message LogRes{
+    string name=1;
+    string email=2;
+    string phone=3;
+    int64 role=4;
+    string address=5;
+    string password=6;
+    string type=7;
+    string userId=8;
+}

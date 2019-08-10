@@ -1,0 +1,27 @@
+syntax = "proto3";
+  // 定义包名
+package probuf;
+
+service Sms{
+    rpc SendCode (SendCodeReq) returns(SendCodeRes){}
+    rpc VerifyCode(VerifyCodeReq) returns(VerifyCodeRes){}
+}
+
+message SendCodeReq{
+    string phone =1;
+}
+
+message SendCodeRes{
+    string userId = 1;
+}
+
+message VerifyCodeReq{
+     string phone =1;
+     string code = 2;
+}
+
+message VerifyCodeRes{
+     string accessToken = 1;
+     string userId = 2;
+     string name = 3;
+}
