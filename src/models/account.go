@@ -16,5 +16,6 @@ type Account struct {
 	Type string `gorm:"NOT NULL"`
 	Verify bool `gorm:"DEFAULE:false"`
 	Code string `json:"code"`
+	AppId string `json:"appid"`
 	CodeExp int32 `json:"code_exp"`
 }

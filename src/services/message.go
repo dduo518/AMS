@@ -16,7 +16,7 @@ func SendVerifierMessage(phone,code string) (interface{},error)  {
 }
 
 // 获取登录验证码，如果手机号是新的则创建用户
-func GetCodeWithLogin(phone string)(interface{},error) {
+func GetCodeWithLogin(phone, appid string)(interface{},error) {
 	result := CheckPhone(phone);
 	if val,ok:=result["islogup"];ok && val==true{
 		userId,_:=result["user_id"]
@@ -27,6 +27,7 @@ func GetCodeWithLogin(phone string)(interface{},error) {
 	logupParams.Phone =phone
 	logupParams.Name =phone
 	logupParams.Verify = false
+	logupParams.AppId = appid
 	userId,err:= LogupServices(logupParams);
 	UpdateCode(phone)
 	return userId,err

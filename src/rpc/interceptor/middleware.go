@@ -2,8 +2,8 @@ package interceptor
 
 import (
 	"AMS/src/models"
+	"AMS/src/utils"
 	"fmt"
-	"github.com/dgrijalva/jwt-go"
 	"log"
 )
 import "golang.org/x/net/context"
@@ -11,8 +11,9 @@ import "google.golang.org/grpc"
 import "google.golang.org/grpc/codes"       // grpc 响应状态码
 import "google.golang.org/grpc/metadata" // grpc metadata包
 // auth 验证Token
-func auth(ctx context.Context) error {
+func auth(ctx context.Context) (error) {
 	md, ok := metadata.FromIncomingContext(ctx)
+	var account model.AccountType
 	if !ok {
 		return grpc.Errorf(codes.Unauthenticated, "无Token认证信息")
 	}
@@ -26,27 +27,22 @@ func auth(ctx context.Context) error {
 	if val, ok := md["token"]; ok {
 		accessToken = val[0]
 	}
-	//const sqlSelect = "appKey"
-	var account model.AccountType
+	log.Println("appid ,accesstoken",appid,accessToken)
 	model.Engine.Model(
 		&model.AccountType{
 		}).Where(
 		"app_id = ?", appid).Find(&account)
-	token, err := jwt.Parse(accessToken, func(token *jwt.Token) (interface{}, error) {
-		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("There was an error")
-		}
-		return []byte(account.AppKey), nil
-	})
-	if err!=nil{
-		return grpc.Errorf(codes.Unauthenticated, "Token认证信息失败")
-	}
-	if token.Valid{
-		context.WithValue(ctx, "type", account.Type)
-		context.WithValue(ctx, "accountTypeId", account.ID)
+	ok,err:= util.VerifyToken(accessToken,account.AppKey);
+	log.Println(ok)
+	log.Println(err)
+	if ok && err==nil{
+		log.Println("set header")
+		grpc.SetHeader(ctx,metadata.MD{
+			"appkey":[]string{account.AppKey},
+			"appid":[]string{appid},
+		})
 		return nil
 	}
-
 	return grpc.Errorf(codes.Unauthenticated, "Token认证信息失败")
 }
 

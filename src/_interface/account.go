@@ -17,6 +17,7 @@ type Account struct {
 	Type string `json:"type"`
 	Verify bool `json:"verify"`
 	Code string `json:"code"`
+	AppId string `json:"appid"`
 	CodeExp string `json:"code_exp"`
 }
 

@@ -1,0 +1,25 @@
+GO_ENV: "prod"
+PORT: ":9006"
+PWD: "~/go/src/AMS/"
+TOKENSECRET: "TOKENSECRET"
+GRPC:
+  PORT: ":9021"
+  NETWOK: "tcp"
+REDIS:
+  HOST: "localhost:6379"
+  DB: 2
+MYSQL:
+  HOST: "cdb-cwn52bic.bj.tencentcdb.com"
+  PORT: "10049"
+  USERNAME: "root"
+  PASSWORD: "380125f4c8a5e8197465d82806a617facbf8e1d6"
+  DATABASE: "AMS_prod"
+LETTER:
+  APPID: "1400236022"
+  APPKEY: "8a49a66fa16ac0368380010c82798adf"
+  TPLID: "382959"
+  SIGN: "golang语言技术分享"
+  TIMEOUT: 3
+  API:
+    SINGLE: "https://yun.tim.qq.com/v5/tlssmssvr/sendsms"
+    GROUP: "https://yun.tim.qq.com/v5/tlssmssvr/sendmultisms2"

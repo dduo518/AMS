@@ -28,7 +28,7 @@ func Logup(c *gin.Context)  {
 func GetCode(c *gin.Context) {
 	phone:=c.Query("phone")
 	fmt.Println(phone)
-	result,err:=service.GetCodeWithLogin(phone);
+	result,err:=service.GetCodeWithLogin(phone,"appid");
 	if err!=nil{
 		app.Response(c,err,400)
 		return

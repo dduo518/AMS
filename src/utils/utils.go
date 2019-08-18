@@ -1,7 +1,9 @@
 package util
 
 import (
+	"fmt"
 	"github.com/dgrijalva/jwt-go"
+	"log"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -38,38 +40,30 @@ func GetCurrentPath() string {
 	return path[:index]
 }
 
-func CreateToken(userId,appid ,secret string) string {
-	mySigningKey := []byte(secret)
-	claims:=jwt.MapClaims{
-		"userid":userId,//签发人 appid
-		"iss":  appid,//签发人 appid
-		"iat":  time.Now().Unix(),//签发时间
-		"nbf": time.Now().Unix(),//生效时间
-		"exp": 60*60,// 过期时间
-	}
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	accessToken,_ := token.SignedString(mySigningKey)
+func CreateToken(userId,appid  string) string {
+	token := jwt.New(jwt.SigningMethodHS256)
+	claims := make(jwt.MapClaims)
+	claims["exp"] = time.Now().Add(time.Hour * time.Duration(1)).Unix()
+	claims["appid"] = appid
+	claims["userId"] = userId
+	claims["iat"] = time.Now().Unix()
+	claims["nbf"] = time.Now().Unix()
+	token.Claims = claims
+	accessToken,_ := token.SignedString([]byte(userId))
 	return accessToken
 }
-func VerifyToken(userId,appid ,secret string) string {
-	mySigningKey := []byte(secret)
-	claims:=jwt.MapClaims{
-		"userid":userId,//签发人 appid
-		"iss":  appid,//签发人 appid
-		"iat":  time.Now().Unix(),//签发时间
-		"nbf": time.Now().Unix(),//生效时间
-		"exp": 60*60,// 过期时间
+func VerifyToken(accessToken ,secret string) (bool,error) {
+	token, err := jwt.Parse(accessToken, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("There was an error")
+		}
+
+		return []byte(secret), nil
+	})
+	if err!=nil{
+		log.Println(err)
+		return false,err
 	}
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	accessToken,_ := token.SignedString(mySigningKey)
-	return accessToken
+	return token.Valid,nil
 }
 
-func Sum(numbers []int) int {
-	sum := 0
-	// 这个 bug 是故意的
-	for _, n := range numbers {
-		sum += n
-	}
-	return sum
-}
