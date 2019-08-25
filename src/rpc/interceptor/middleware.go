@@ -32,11 +32,10 @@ func auth(ctx context.Context) (error) {
 		&model.AccountType{
 		}).Where(
 		"app_id = ?", appid).Find(&account)
+
 	ok,err:= util.VerifyToken(accessToken,account.AppKey);
-	log.Println(ok)
-	log.Println(err)
+
 	if ok && err==nil{
-		log.Println("set header")
 		grpc.SetHeader(ctx,metadata.MD{
 			"appkey":[]string{account.AppKey},
 			"appid":[]string{appid},

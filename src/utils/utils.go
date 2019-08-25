@@ -67,3 +67,28 @@ func VerifyToken(accessToken ,secret string) (bool,error) {
 	return token.Valid,nil
 }
 
+func VerifyAccessToken(accessToken string) (bool,error,string,string) {
+	claims := jwt.MapClaims{}
+	var userId string
+	var appId string
+	token, err := jwt.ParseWithClaims(accessToken,claims, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("There was an error")
+		}
+
+
+		if _,ok:=claims["userId"];ok{
+			userId=claims["userId"].(string)
+		}
+
+		if _,ok:=claims["appid"];ok{
+			appId=claims["appid"].(string)
+		}
+
+		return []byte(userId), nil
+	})
+	if err!=nil{
+		return false,err,"",""
+	}
+	return token.Valid,nil,userId,appId
+}

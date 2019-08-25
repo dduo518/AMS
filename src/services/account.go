@@ -1,9 +1,13 @@
 package services
 
 import (
+	"AMS/config"
 	"AMS/src/_interface"
 	"AMS/src/models"
 	"AMS/src/utils"
+	"strconv"
+	"time"
+	"errors"
 )
 import _ "AMS/src/_interface"
 
@@ -43,16 +47,19 @@ func VerifyCode(phone,code,appid string)(map[string]interface{},error)  {
 		&model.Account{
 		}).Select(sqlSelect).Where(
 			"phone = ?", phone).Find(&account)
-	//if account.UserId==""{
-	//	return nil,errors.New("用户不存在")
-	//}else if account.Code!=code{
-	//	return nil,errors.New("验证码无效")
-	//}
-	//nowStamp :=time.Now().Unix()
-	//codeExp, _ := strconv.ParseInt(account.CodeExp, 10, 64)
-	//if nowStamp>codeExp{
-	//	return nil,errors.New("验证码过期")
-	//}
+	if config.Conf.GO_ENV=="prod"{
+		if account.UserId==""{
+			return nil,errors.New("用户不存在")
+		}else if account.Code!=code{
+			return nil,errors.New("验证码无效")
+		}
+		nowStamp :=time.Now().Unix()
+		codeExp, _ := strconv.ParseInt(account.CodeExp, 10, 64)
+		if nowStamp>codeExp{
+			return nil,errors.New("验证码过期")
+		}
+	}
+
 	model.Engine.Model(&model.Account{}).Where(
 		"phone = ?",phone).Update(map[string]interface{}{
 		"verify":true,

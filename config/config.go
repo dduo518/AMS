@@ -21,6 +21,17 @@ type conf struct {
 	Letter letter `yaml:"LETTER"`
 	GprcConf gprcConf `yaml:"GRPC"`
 	TokenSecret string `yaml:"TOKENSECRET"`
+	Cos cos `yaml:"COS"`
+}
+
+type cos struct {
+	Host     string `yaml:"HOST"`
+	Name     string `yaml:"NAME"`
+	SecretID     string `yaml:"SECRETID"`
+	SecretKey    string `yaml:"SECRETKEY"`
+	AppId    string `yaml:"APPID"`
+	Bucket    string `yaml:"BUCKET"`
+	Region    string `yaml:"REGION"`
 }
 
 type redis struct {

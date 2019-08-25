@@ -23,3 +23,11 @@ LETTER:
   API:
     SINGLE: "https://yun.tim.qq.com/v5/tlssmssvr/sendsms"
     GROUP: "https://yun.tim.qq.com/v5/tlssmssvr/sendmultisms2"
+COS:
+  NAME: "cos"
+  APPID: "1256209849"
+  SECRETID: "AKIDhBWdXGj1UmrlT9br5rUtgFZxvfBbnBk9"
+  SECRETKEY: "KcjgaMQUN6j9SgoHuNnnhZGnUeqpeiGh"
+  BUCKET: "pic-dev"
+  REGION: "ap-guangzhou"
+  HOST: "myqcloud.com"

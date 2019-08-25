@@ -21,5 +21,6 @@ func Response(c *gin.Context,result interface{},code int)   {
 			"data":result,
 		})
 	}
-
+	c.Abort()
+	return
 }
