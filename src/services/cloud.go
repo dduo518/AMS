@@ -76,7 +76,8 @@ func GetFederationToken()(str string,err error)  {
 }
 
 func UploadFile(content []byte, fileName string, fileType string)( string, error){
-	u,_:=url.Parse("http://"+config.Conf.Cos.Bucket+"-"+config.Conf.Cos.AppId+"."+config.Conf.Cos.Name+"."+config.Conf.Cos.Region+"."+config.Conf.Cos.Host)
+	var uri= "http://"+config.Conf.Cos.Bucket+"-"+config.Conf.Cos.AppId+"."+config.Conf.Cos.Name+"."+config.Conf.Cos.Region+"."+config.Conf.Cos.Host
+	u,_:=url.Parse(uri)
 	b := &cos.BaseURL{BucketURL: u}
 	client := cos.NewClient(b, &http.Client{
 		Transport: &cos.AuthorizationTransport{
@@ -90,15 +91,13 @@ func UploadFile(content []byte, fileName string, fileType string)( string, error
 			ContentLength:len(content),
 		},
 		ACLHeaderOptions: &cos.ACLHeaderOptions{
-			XCosACL: "private",
+			XCosACL: "public-read",
 		},
 	}
-
-	var key = fileName
-	resp, err := client.Object.Put(context.Background(), key, strings.NewReader(string(content)), opt)
+	resp, err := client.Object.Put(context.Background(), fileName, strings.NewReader(string(content)), opt)
 	defer resp.Body.Close()
 	if err != nil {
 		return "",err
 	}
-	return "",nil
+	return uri+"/"+fileName,nil
 }
