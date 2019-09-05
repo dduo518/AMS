@@ -7,20 +7,15 @@ import (
 )
 
 func SetUp(router *gin.Engine)  {
-
 	router.GET("/health", func(context *gin.Context) {
 		context.String(200,"hello AMS 222")
 	})
-
-	socket.StartSocket(router)
-
 	router.Use(middleware.CORSMiddleware())
-	router.Use(middleware.Authrization())
-
-	v1Account := router.Group("/account/v1.0")
+	socket.StartSocket(router)
+	v1Account := router.Group("/account/v1.0",middleware.Authrization())
 	Account(v1Account)
-	v1Message := router.Group("/message/v1.0")
+	v1Message := router.Group("/message/v1.0",middleware.Authrization())
 	Message(v1Message)
-	v1Cloud := router.Group("/cloud/v1.0")
+	v1Cloud := router.Group("/cloud/v1.0",middleware.Authrization())
 	CloudApi(v1Cloud)
 }
